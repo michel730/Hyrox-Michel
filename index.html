@@ -9,20 +9,21 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>HYROX Michel V4.1</title>
+<title>HYROX Michel V5</title>
 <style>
 :root{--n:#061a33;--n2:#0b2a4a;--b:#1f6feb;--bg:#f3f6fa;--c:#fff;--t:#172033;--m:#657286;--l:#dbe3ee;--g:#16a34a;--o:#f59e0b;--r:#dc2626}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--t);line-height:1.42}
 header{background:linear-gradient(135deg,var(--n),var(--n2));color:white;padding:22px 16px 18px;position:sticky;top:0;z-index:10;box-shadow:0 3px 12px #0003}
 h1{font-size:25px;margin:0 0 4px}h2{font-size:21px;color:var(--n);margin:0 0 12px}h3{font-size:17px;color:var(--n);margin:14px 0 8px}
-.sub{opacity:.86;font-size:14px}main{max-width:950px;margin:0 auto;padding:12px}
+.sub{opacity:.86;font-size:14px}main{max-width:980px;margin:0 auto;padding:12px}
 nav{display:flex;gap:8px;overflow:auto;background:white;border-bottom:1px solid var(--l);padding:10px 12px;position:sticky;top:82px;z-index:9}
 nav button{border:1px solid #cbd5e1;background:#edf4fb;color:var(--n);border-radius:999px;padding:9px 12px;font-weight:800;white-space:nowrap}
 nav button.on{background:var(--n);color:white}
 .card{background:white;border:1px solid var(--l);border-radius:16px;padding:14px;margin-bottom:13px;box-shadow:0 2px 8px #001a3308}
 .hero{background:linear-gradient(135deg,var(--n),#123b66);color:white;border:0}.hero h2,.hero h3{color:white}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .stat{background:#f8fbff;border:1px solid #dce8f5;border-radius:14px;padding:12px}.hero .stat{background:#ffffff14;border-color:#ffffff38}
+.linkcard{display:block;text-decoration:none;color:inherit;cursor:pointer}.linkcard:hover{outline:2px solid var(--b)}
 .big{font-size:28px;font-weight:900;color:var(--n)}.hero .big{color:white}.muted{font-size:13px;color:var(--m)}.hero .muted{color:#dcecff}
 .badge{display:inline-block;border-radius:999px;padding:5px 10px;font-size:13px;font-weight:900}.green{background:#dcfce7;color:#166534}.orange{background:#ffedd5;color:#9a3412}.red{background:#fee2e2;color:#991b1b}.blue{background:#dcecff;color:var(--n)}
 input,select,textarea,button{font-size:16px;border-radius:10px;border:1px solid #c8d0dc;padding:9px}input,select,textarea{width:100%;background:white}textarea{min-height:95px}label{display:block;font-weight:800;margin:9px 0 4px}
@@ -30,25 +31,43 @@ button{background:#eef3f8;color:var(--n);font-weight:900}.primary{background:var
 .hidden{display:none}.history{white-space:pre-wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;font-size:14px;overflow:auto}
 .day{border-left:6px solid var(--b)}.progress{height:14px;background:#dbe5f0;border-radius:999px;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,#1f6feb,#0b2a4a)}
 canvas{width:100%;height:230px;background:white;border:1px solid #e2e8f0;border-radius:12px}.timer{font-size:44px;font-weight:900;color:var(--n)}
-.row{display:grid;grid-template-columns:32px 1fr 70px 65px;gap:6px;align-items:center;margin:7px 0}.row input[type=checkbox]{width:24px;height:24px}.head{font-size:12px;color:var(--m);font-weight:900}
-@media(max-width:650px){.grid,.grid3{grid-template-columns:1fr}nav{top:77px}main{padding:10px}.row{grid-template-columns:30px 1fr 64px 58px}}
+table{width:100%;border-collapse:collapse}th,td{border:1px solid #dbe3ee;padding:8px;text-align:left}th{background:#eef4fb;color:var(--n)}
+@media(max-width:750px){.grid,.grid3,.grid4{grid-template-columns:1fr}nav{top:77px}main{padding:10px}table{font-size:13px}}
 </style>
 </head>
 <body>
-<header><h1>📒 Carnet Prépa HYROX Michel</h1><div class="sub">V4.1 · Dashboard + pages quotidiennes · Nice 30/10</div></header>
+<header><h1>📒 Carnet Prépa HYROX Michel</h1><div class="sub">V5 · Historique HYROX + records solo uniquement · Nice 30/10</div></header>
 <nav>
-<button id="b-home" class="on" onclick="tab('home')">Accueil</button><button id="b-days" onclick="tab('days')">Journées</button><button id="b-add" onclick="tab('add')">Ajouter</button><button id="b-stats" onclick="tab('stats')">Stats</button><button id="b-setup" onclick="tab('setup')">Installation</button>
+<button id="b-home" class="on" onclick="tab('home')">Accueil</button>
+<button id="b-days" onclick="tab('days')">Journées</button>
+<button id="b-add" onclick="tab('add')">Ajouter</button>
+<button id="b-hyrox" onclick="tab('hyrox')">Chronos HYROX</button>
+<button id="b-records" onclick="tab('records')">Records solo</button>
+<button id="b-stats" onclick="tab('stats')">Stats</button>
+<button id="b-setup" onclick="tab('setup')">Installation</button>
 </nav>
+
 <main>
 <section id="home">
 <div class="card hero">
 <h2>🏁 Objectifs</h2>
 <div class="grid">
-<div class="stat"><div class="muted">Principal</div><div class="big">Nice 30/10</div><b>Michel · Open Solo</b></div>
-<div class="stat"><div class="muted">Test</div><div class="big">Lannion</div><b>Michel + Tanguy · Double Open</b></div>
+<a class="stat linkcard" href="https://hyrox.com/event/hyrox-nice/" target="_blank" rel="noopener"><div class="muted">Principal</div><div class="big">Nice 30/10</div><b>Michel · Open Solo</b><div class="muted">Ouvrir la page officielle HYROX Nice ↗</div></a>
+<a class="stat linkcard" href="https://remizenforme.fr" target="_blank" rel="noopener"><div class="muted">Test</div><div class="big">Lannion</div><b>Michel + Tanguy · Double Open</b><div class="muted">Page Remise en Forme ↗</div></a>
 </div><br>
-<div class="stat"><div class="muted">Objectif suivant</div><div class="big">Paris décembre 2026</div><b>Michel · Open Solo</b> <span class="badge orange">Veille inscriptions</span></div>
+<a class="stat linkcard" href="https://hyrox.com/event/hyrox-paris-s26-27/" target="_blank" rel="noopener"><div class="muted">Objectif suivant</div><div class="big">Paris décembre 2026</div><b>Michel · Open Solo</b> <span class="badge orange">Veille inscriptions</span><div class="muted">Ouvrir la page officielle HYROX Paris ↗</div></a>
 </div>
+
+<div class="card">
+<h2>🔔 Veille inscriptions</h2>
+<p class="muted">Clique sur une carte pour ouvrir la page web concernée.</p>
+<div class="grid3">
+<a class="stat linkcard" href="https://hyrox.com/event/hyrox-paris-s26-27/" target="_blank" rel="noopener"><div class="muted">Priorité</div><div class="big">Paris 2026</div><b>Open Solo</b><br><span class="badge orange">Tickets bientôt en vente</span></a>
+<a class="stat linkcard" href="https://hyrox.com/event/hyrox-nice/" target="_blank" rel="noopener"><div class="muted">Objectif principal</div><div class="big">Nice</div><b>Open Solo</b></a>
+<a class="stat linkcard" href="https://remizenforme.fr" target="_blank" rel="noopener"><div class="muted">Test Lannion</div><div class="big">Lannion</div><b>Double avec Tanguy</b></a>
+</div>
+</div>
+
 <div class="card">
 <h2>📊 Tableau de bord</h2>
 <div class="grid3">
@@ -58,21 +77,26 @@ canvas{width:100%;height:230px;background:white;border:1px solid #e2e8f0;border-
 </div>
 <h3>Progression calendrier vers Nice</h3><div class="progress"><div id="prog"></div></div><div id="count" class="muted" style="margin-top:8px"></div>
 </div>
+
 <div class="card">
-<h2>🔢 Volumes cumulés</h2>
-<div class="grid3">
-<div class="stat"><div class="muted">Wall balls</div><div id="vwb" class="big">-</div></div>
-<div class="stat"><div class="muted">Lunges</div><div id="vl" class="big">-</div></div>
-<div class="stat"><div class="muted">Séances</div><div id="vs" class="big">-</div></div>
+<h2>🔢 Volumes cumulés prépa</h2>
+<div class="grid4">
+<div class="stat"><div class="muted">Wall balls</div><div id="vwb" class="big">40</div></div>
+<div class="stat"><div class="muted">Lunges</div><div id="vl" class="big">50</div></div>
+<div class="stat"><div class="muted">Rameur</div><div id="vr" class="big">1205 m</div></div>
+<div class="stat"><div class="muted">Séances</div><div id="vs" class="big">1</div></div>
 </div>
 </div>
+
 <div class="card">
 <h2>👥 Équipe HYROX</h2>
 <ul><li><b>Michel</b> : Nice Open Solo, Paris 2026 Open Solo.</li><li><b>Tanguy</b> : double Lannion avec Michel, coach fréquent le samedi.</li><li><b>Rémi</b> : patron Remise en Forme, Nice Open Solo, double Paris avec Michel.</li><li><b>Katell</b> : femme de Michel, s’entraîne le mercredi avec lui, double avec Audrey.</li><li><b>Audrey</b> : double Open avec Katell.</li></ul>
 <p><b>Mercredi :</b> séance renforcement/cardio HYROX avec Katell, coachée par Rémi ou Tanguy.</p><p><b>Samedi :</b> musculation, souvent avec Tanguy.</p>
 </div>
 </section>
+
 <section id="days" class="hidden"><div id="dayCards"></div></section>
+
 <section id="add" class="hidden">
 <div class="card">
 <h2>➕ Ajouter une journée</h2>
@@ -83,20 +107,67 @@ canvas{width:100%;height:230px;background:white;border:1px solid #e2e8f0;border-
 <label>Données Apple Watch<textarea id="watch" placeholder="Durée, kcal, FC moyenne..."></textarea></label>
 <button class="primary" onclick="saveDay()">Enregistrer</button>
 </div>
+<div class="card"><h2>⏱️ Timer gainage</h2><div id="timer" class="timer">02:00</div><button onclick="startTimer(120)">2 min</button> <button onclick="startTimer(60)">1 min</button> <button onclick="stopTimer()">Stop</button></div>
+</section>
+
+<section id="hyrox" class="hidden">
 <div class="card">
-<h2>⏱️ Timer gainage</h2><div id="timer" class="timer">02:00</div><button onclick="startTimer(120)">2 min</button> <button onclick="startTimer(60)">1 min</button> <button onclick="stopTimer()">Stop</button>
+<h2>⏱️ Historique HYROX</h2>
+<table>
+<thead><tr><th>Épreuve</th><th>Format</th><th>Partenaire</th><th>Temps</th><th>Statut records</th></tr></thead>
+<tbody id="hyroxRows"></tbody>
+</table>
+</div>
+<div class="card">
+<h2>Bangkok 2026 — Open Solo</h2>
+<div class="grid3"><div class="stat"><div class="muted">Temps officiel</div><div class="big">1:46:21</div></div><div class="stat"><div class="muted">Catégorie</div><div class="big">55e</div></div><div class="stat"><div class="muted">Général</div><div class="big">1807e</div></div></div>
+<h3>Splits solo</h3>
+<table><thead><tr><th>Atelier</th><th>Temps</th><th>Place</th></tr></thead><tbody>
+<tr><td>1000m SkiErg</td><td>4:51</td><td>37</td></tr><tr><td>50m Sled Push</td><td>2:22</td><td>4</td></tr><tr><td>50m Sled Pull</td><td>4:56</td><td>23</td></tr><tr><td>80m Burpee Broad Jump</td><td>8:09</td><td>65</td></tr><tr><td>1000m Row</td><td>5:00</td><td>35</td></tr><tr><td>200m Farmers Carry</td><td>2:31</td><td>53</td></tr><tr><td>100m Sandbag Lunges</td><td>7:44</td><td>71</td></tr><tr><td>Wall Balls</td><td>8:41</td><td>46</td></tr><tr><td>Run total</td><td>47:43</td><td>56</td></tr><tr><td>Best run lap</td><td>5:06</td><td>64</td></tr></tbody></table>
+</div>
+<div class="card">
+<h2>Paris 2026 — Double avec Rémi</h2>
+<div class="grid3"><div class="stat"><div class="muted">Temps officiel</div><div class="big">1:17:37</div></div><div class="stat"><div class="muted">Catégorie</div><div class="big">34e</div></div><div class="stat"><div class="muted">Général</div><div class="big">378e</div></div></div>
+<p class="muted">Conservé dans l’historique, mais non pris en compte dans les records personnels solo.</p>
+<h3>Splits double</h3>
+<table><thead><tr><th>Atelier</th><th>Temps</th><th>Place</th></tr></thead><tbody>
+<tr><td>1000m SkiErg</td><td>4:04</td><td>245</td></tr><tr><td>50m Sled Push</td><td>1:33</td><td>104</td></tr><tr><td>50m Sled Pull</td><td>2:20</td><td>36</td></tr><tr><td>80m Burpee Broad Jump</td><td>2:39</td><td>61</td></tr><tr><td>1000m Row</td><td>4:08</td><td>74</td></tr><tr><td>200m Farmers Carry</td><td>1:39</td><td>220</td></tr><tr><td>100m Sandbag Lunges</td><td>3:45</td><td>285</td></tr><tr><td>Wall Balls</td><td>5:32</td><td>492</td></tr><tr><td>Run total</td><td>43:41</td><td>438</td></tr><tr><td>Best run lap</td><td>5:05</td><td>462</td></tr></tbody></table>
 </div>
 </section>
+
+<section id="records" class="hidden">
+<div class="card">
+<h2>🏆 Records personnels — SOLO uniquement</h2>
+<p class="muted">Les performances en double sont visibles dans l’historique mais ne comptent pas dans les records personnels.</p>
+<table>
+<thead><tr><th>Record solo</th><th>Référence actuelle</th><th>Source</th><th>Objectif Nice</th></tr></thead>
+<tbody>
+<tr><td>HYROX Open Solo</td><td><b>1:46:21</b></td><td>Bangkok 2026</td><td>&lt; 1:40:00</td></tr>
+<tr><td>1000m SkiErg</td><td>4:51</td><td>Bangkok Solo</td><td>&lt; 4:45</td></tr>
+<tr><td>1000m Row</td><td>5:00</td><td>Bangkok Solo</td><td>&lt; 4:50</td></tr>
+<tr><td>100m Sandbag Lunges</td><td>7:44</td><td>Bangkok Solo</td><td>&lt; 7:00</td></tr>
+<tr><td>Wall Balls</td><td>8:41</td><td>Bangkok Solo</td><td>&lt; 7:30</td></tr>
+<tr><td>Run total</td><td>47:43</td><td>Bangkok Solo</td><td>&lt; 45:00</td></tr>
+<tr><td>Best run lap</td><td>5:06</td><td>Bangkok Solo</td><td>&lt; 5:00</td></tr>
+</tbody></table>
+</div>
+<div class="card">
+<h2>🎯 Analyse pour Nice</h2>
+<p>Les plus gros gains potentiels restent sur <b>Wall Balls</b>, <b>Lunges</b> et <b>Burpees</b>. La routine quotidienne 30 wall balls + 50 lunges + gainage cible directement ces points.</p>
+</div>
+</section>
+
 <section id="stats" class="hidden">
 <div class="card"><h2>📈 Courbes</h2><h3>Poids</h3><canvas id="cw" width="760" height="230"></canvas><h3>Sommeil</h3><canvas id="cs" width="760" height="230"></canvas></div>
-<div class="card"><h2>🏋️ Records / repères</h2><div id="records" class="history"></div></div>
 </section>
+
 <section id="setup" class="hidden">
-<div class="card"><h2>📱 Installation iPhone</h2><ol><li>Ouvrir l’URL GitHub Pages dans Safari.</li><li>Menu Safari / Partage.</li><li>Ajouter à l’écran d’accueil.</li><li>Nom : <b>HYROX Michel</b>.</li></ol><p class="muted">Les données ajoutées dans l’app sont stockées localement dans Safari sur cet iPhone.</p></div>
+<div class="card"><h2>📱 Installation / mise à jour</h2><ol><li>Remplacer les fichiers GitHub par ceux du ZIP V5.</li><li>Attendre le déploiement GitHub Pages.</li><li>Ouvrir l’URL avec <b>?v=5</b> si Safari garde l’ancienne version.</li><li>Sur iPhone : Ajouter à l’écran d’accueil.</li></ol></div>
 </section>
 </main>
+
 <script>
-const KEY="hyroxMichelV41";
+const KEY="hyroxMichelV5";
 const nice=new Date("2026-10-30"),start=new Date("2026-06-17");
 const seed=[
 {date:"2026-06-17",weight:94.9,sleep:"6h45",wake:"🟠 Orange",sore:"",rpe:"8.5",type:"Endorphine",notes:"Réveils nocturnes entre 3h40 et 5h30. Journée orange.",watch:"Apple Watch : 1h07m07s, 518 kcal actives, 650 kcal totales, FC moyenne 111 bpm.",content:`Séance veille coach HYROX :
@@ -126,21 +197,15 @@ Finisher :
 - Tapis : 11:13, 1,55 km, 130 kcal, inclinaison 2 %, course à 9 km/h puis retour au calme.`},
 {date:"2026-06-18",weight:94.1,sleep:"7h03",wake:"🟢 Vert",sore:"0",rpe:"",type:"Check-in matin",notes:"Bon réveil vers 5h, rendormissement jusqu’à 5h30. Bonne nuit. 0 courbature. Bonnes sensations.",watch:"",content:"Routine du jour : 30 wall balls, 50 lunges, 2 minutes de gainage."}
 ];
+const hyrox=[{event:"Bangkok 2026",format:"Open Solo",partner:"-",time:"1:46:21",records:"✅ Compte pour les records solo"},{event:"Paris 2026",format:"Double Open",partner:"Rémi",time:"1:17:37",records:"Historique uniquement"},{event:"Lannion 2026",format:"Double Open",partner:"Tanguy",time:"À venir",records:"Historique uniquement"},{event:"Nice 2026",format:"Open Solo",partner:"-",time:"Objectif",records:"Future référence solo"}];
 function days(){let x=localStorage.getItem(KEY);if(!x){localStorage.setItem(KEY,JSON.stringify(seed));return seed}return JSON.parse(x)}
 function setDays(x){localStorage.setItem(KEY,JSON.stringify(x))}
 function tab(id){document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll("nav button").forEach(b=>b.classList.remove("on"));document.getElementById("b-"+id).classList.add("on");render()}
 function fr(d){let [y,m,j]=d.split("-");return j+"/"+m+"/"+y}
 function fmt(x){return `<div class="card day"><h2>📅 ${fr(x.date)} — ${x.type}</h2><span class="badge ${x.wake&&x.wake.includes("Vert")?"green":x.wake&&x.wake.includes("Orange")?"orange":"blue"}">${x.wake||"Réveil non renseigné"}</span><p><b>Poids :</b> ${x.weight||"-"} kg · <b>Sommeil :</b> ${x.sleep||"-"} · <b>Courbatures :</b> ${x.sore||"-"}/10 · <b>RPE :</b> ${x.rpe||"-"}/10</p><h3>Notes</h3><div class="history">${x.notes||"-"}</div>${x.watch?`<h3>Apple Watch</h3><div class="history">${x.watch}</div>`:""}<h3>Séance</h3><div class="history">${x.content||"-"}</div></div>`}
-function render(){let d=days().sort((a,b)=>b.date.localeCompare(a.date));dayCards.innerHTML=d.map(fmt).join("");let last=d[0]||{};dw.textContent=last.weight?last.weight+" kg":"-";ds.textContent=last.sleep||"-";dr.textContent=last.wake?last.wake.split(" ")[0]:"-";vs.textContent=d.filter(x=>x.type!="Check-in matin").length;vwb.textContent=sum(/(\\d+)\\s*(?:reps?\\s*)?@?\\s*9?\\s*kg?.*wall|wall balls\\D+(\\d+)/ig,d);vl.textContent=sum(/lunges?\\D+(\\d+)|fentes?\\D+(\\d+)/ig,d);let now=new Date(),pct=Math.max(0,Math.min(100,Math.round((now-start)/(nice-start)*100)));prog.style.width=pct+"%";count.textContent=`J-${Math.ceil((nice-now)/86400000)} avant Nice · ${pct}% du calendrier`;chart("cw",d.map(x=>({date:x.date,val:parseFloat(x.weight)})).filter(x=>!isNaN(x.val)).reverse(),"kg");chart("cs",d.map(x=>({date:x.date,val:sleepH(x.sleep)})).filter(x=>!isNaN(x.val)).reverse(),"h");records.textContent=`Butterfly : 50 kg × 9 — 17/06
-Crunch machine : 55 kg × 10 — 17/06
-Obliques Panatta : 50 kg × 8D + 8G — 17/06
-Lunges : 2 × 10 kg, 50 reps — 17/06
-Wall Balls : 9 kg, 40 reps — 17/06
-Rameur : 1 205 m en 5:07 — 17/06
-SkiErg : 65 cal en 5:05 — 17/06`}
-function sum(rx,d){let total=0;d.forEach(x=>{let c=x.content||"",m;while((m=rx.exec(c))){total+=parseInt(m[1]||m[2]||0)}});return total||"-"}
-function sleepH(s){let m=String(s||"").match(/(\\d+)h(\\d+)?/);return m?parseInt(m[1])+(parseInt(m[2]||0)/60):NaN}
-function chart(id,data,suf){let c=document.getElementById(id),ctx=c.getContext("2d");ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle="#061a33";ctx.font="14px -apple-system";if(data.length<2){ctx.fillText("Ajoute au moins 2 données.",20,40);return}let vals=data.map(x=>x.val),min=Math.min(...vals)-.2,max=Math.max(...vals)+.2;ctx.strokeStyle="#1f6feb";ctx.lineWidth=4;ctx.beginPath();data.forEach((p,i)=>{let x=45+i*((c.width-85)/(data.length-1)),y=190-((p.val-min)/(max-min))*140;if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y)});ctx.stroke();ctx.fillStyle="#061a33";data.forEach((p,i)=>{let x=45+i*((c.width-85)/(data.length-1)),y=190-((p.val-min)/(max-min))*140;ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill();ctx.fillText(p.val.toFixed(1)+suf,x-18,y-12)})}
+function render(){let d=days().sort((a,b)=>b.date.localeCompare(a.date));dayCards.innerHTML=d.map(fmt).join("");let last=d[0]||{};dw.textContent=last.weight?last.weight+" kg":"-";ds.textContent=last.sleep||"-";dr.textContent=last.wake?last.wake.split(" ")[0]:"-";vs.textContent=d.filter(x=>x.type!="Check-in matin").length;vwb.textContent=40;vl.textContent=50;vr.textContent="1205 m";let now=new Date(),pct=Math.max(0,Math.min(100,Math.round((now-start)/(nice-start)*100)));prog.style.width=pct+"%";count.textContent=`J-${Math.ceil((nice-now)/86400000)} avant Nice · ${pct}% du calendrier`;hyroxRows.innerHTML=hyrox.map(x=>`<tr><td>${x.event}</td><td>${x.format}</td><td>${x.partner}</td><td><b>${x.time}</b></td><td>${x.records}</td></tr>`).join("");chart("cw",d.map(x=>({date:x.date,val:parseFloat(x.weight)})).filter(x=>!isNaN(x.val)).reverse(),"kg");chart("cs",d.map(x=>({date:x.date,val:sleepH(x.sleep)})).filter(x=>!isNaN(x.val)).reverse(),"h")}
+function sleepH(s){let m=String(s||"").match(/(\d+)h(\d+)?/);return m?parseInt(m[1])+(parseInt(m[2]||0)/60):NaN}
+function chart(id,data,suf){let c=document.getElementById(id);if(!c)return;let ctx=c.getContext("2d");ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle="#061a33";ctx.font="14px -apple-system";if(data.length<2){ctx.fillText("Ajoute au moins 2 données.",20,40);return}let vals=data.map(x=>x.val),min=Math.min(...vals)-.2,max=Math.max(...vals)+.2;ctx.strokeStyle="#1f6feb";ctx.lineWidth=4;ctx.beginPath();data.forEach((p,i)=>{let x=45+i*((c.width-85)/(data.length-1)),y=190-((p.val-min)/(max-min))*140;if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y)});ctx.stroke();ctx.fillStyle="#061a33";data.forEach((p,i)=>{let x=45+i*((c.width-85)/(data.length-1)),y=190-((p.val-min)/(max-min))*140;ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill();ctx.fillText(p.val.toFixed(1)+suf,x-18,y-12)})}
 function saveDay(){let d=days().filter(x=>x.date!==date.value);d.unshift({date:date.value,weight:parseFloat(weight.value)||"",sleep:sleep.value,wake:wake.value,sore:sore.value,rpe:rpe.value,type:type.value||"Journée",notes:notes.value,content:content.value,watch:watch.value});setDays(d);render();alert("Journée enregistrée ✅")}
 let interval;function startTimer(s){clearInterval(interval);let r=s;function u(){timer.textContent=String(Math.floor(r/60)).padStart(2,"0")+":"+String(r%60).padStart(2,"0");if(r===0){clearInterval(interval);alert("Temps écoulé !")}r--}u();interval=setInterval(u,1000)}function stopTimer(){clearInterval(interval)}
 date.value=new Date().toISOString().slice(0,10);render();

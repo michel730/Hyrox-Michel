@@ -1,3 +1,3 @@
-# Carnet Prépa HYROX Michel V4.1
+# Carnet Prépa HYROX Michel V5
 
-Remplacer les fichiers du dépôt GitHub par ceux-ci.
+Historique HYROX, records solo uniquement, liens HYROX cliquables.
