@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HYROX Michel">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>HYROX Michel</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#061a33">
+<style>
+:root{--navy:#061a33;--navy2:#0b2a4a;--blue:#1f6feb;--bg:#f3f6fa;--card:#fff;--text:#152033;--muted:#687386;--line:#d8dee9}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;line-height:1.4}
+header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:white;padding:22px 16px 18px;position:sticky;top:0;z-index:20;box-shadow:0 3px 12px #0003}
+h1{font-size:25px;margin:0 0 4px;font-weight:800}h2{font-size:21px;margin:0 0 12px;color:var(--navy)}h3{font-size:17px;margin:16px 0 8px;color:var(--navy)}
+main{max-width:900px;margin:0 auto;padding:14px}.sub{opacity:.85;font-size:14px}
+nav{display:flex;gap:8px;overflow:auto;padding:10px 14px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:82px;z-index:19}
+nav button{white-space:nowrap;background:#eef3fa;color:var(--navy);border:1px solid #cfd8e6;border-radius:999px;padding:9px 13px;font-weight:700}
+nav button.active{background:var(--navy);color:white}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:14px;box-shadow:0 2px 8px #0b1f3a0a}
+.hero{background:linear-gradient(135deg,var(--navy),#123b66);color:white;border:0}.hero h2,.hero h3{color:white}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:#f7faff;border:1px solid #dbe8f7;border-radius:14px;padding:12px}.big{font-size:26px;font-weight:900;color:var(--navy)}.hero .big{color:white}.muted{color:var(--muted);font-size:13px}.hero .muted{color:#dcecff}
+.badge{display:inline-block;border-radius:999px;padding:5px 10px;font-size:13px;font-weight:800}.orange{background:#ffedd5;color:#9a3412}.green{background:#dcfce7;color:#166534}.blue{background:#dcecff;color:var(--navy)}
+input,select,textarea,button{font-size:16px;border-radius:10px;border:1px solid #c8d0dc;padding:9px}input,select,textarea{width:100%;background:#fff}textarea{min-height:90px}
+label{display:block;font-weight:700;margin:9px 0 4px}button{background:#edf2f7;color:var(--navy);font-weight:800}.primary{background:var(--navy);color:#fff;border-color:var(--navy)}.danger{background:#fee2e2;color:#991b1b;border-color:#fecaca}
+.row{display:grid;grid-template-columns:32px 1fr 72px 65px;gap:6px;align-items:center;margin:7px 0}.row input[type=checkbox]{width:24px;height:24px}.head{font-size:12px;color:var(--muted);font-weight:800}
+.exercise{border-top:1px solid #edf1f5;margin-top:10px;padding-top:10px}.history{white-space:pre-wrap;background:#f7f9fc;border:1px solid #e1e7ef;border-radius:12px;padding:10px;font-size:14px;overflow:auto}.hidden{display:none}
+.progress{height:14px;background:#dbe5f0;border-radius:999px;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,#1f6feb,#0b2a4a)}canvas{width:100%;height:220px;background:#fff;border:1px solid #e1e7ef;border-radius:12px}.timer{font-size:44px;font-weight:900;color:var(--navy);margin:8px 0}
+@media(max-width:650px){.grid,.grid3{grid-template-columns:1fr}nav{top:77px}.row{grid-template-columns:30px 1fr 68px 60px}main{padding:10px}}
+</style></head>
+<body>
+<header><h1>📒 Carnet Prépa HYROX Michel</h1><div class="sub">V4 PWA · Objectif principal : HYROX Nice 30/10 · Open Solo</div></header>
+<nav><button onclick="tab('home')" id="btn-home" class="active">Accueil</button><button onclick="tab('today')" id="btn-today">Jour du jour</button><button onclick="tab('journal')" id="btn-journal">Journal</button><button onclick="tab('stats')" id="btn-stats">Stats</button><button onclick="tab('setup')" id="btn-setup">Installation</button></nav>
+<main>
+<section id="home">
+<div class="card hero"><h2>🏁 Objectifs HYROX</h2><div class="grid"><div class="stat"><div class="muted">Objectif principal</div><div class="big">Nice 30/10</div><b>Michel · Open Solo</b></div><div class="stat"><div class="muted">Test grandeur nature</div><div class="big">Lannion</div><b>Michel + Tanguy · Double Open</b></div></div><br><div class="stat"><div class="muted">Objectif suivant</div><div class="big">Paris Décembre 2026</div><b>Michel · Open Solo</b><br><span class="badge orange">Veille inscriptions à faire</span></div></div>
+<div class="card"><h2>📊 Tableau de bord</h2><div class="grid3"><div class="stat"><div class="muted">Dernier poids</div><div id="dashWeight" class="big">-</div></div><div class="stat"><div class="muted">Dernier sommeil</div><div id="dashSleep" class="big">-</div></div><div class="stat"><div class="muted">Séances enregistrées</div><div id="dashSessions" class="big">-</div></div></div><h3>Progression vers Nice</h3><div class="progress"><div id="niceProgress" style="width:0%"></div></div><div id="countdown" class="muted" style="margin-top:8px"></div></div>
+<div class="card"><h2>👥 Équipe & organisation</h2><ul><li><b>Michel</b> → Nice Open Solo ; Paris 2026 Open Solo</li><li><b>Tanguy</b> → Double Open avec Michel à Lannion ; coach fréquent le samedi</li><li><b>Rémi</b> → patron Remise en Forme ; Nice Open Solo ; double Paris avec Michel</li><li><b>Katell</b> → femme de Michel ; entraînement du mercredi avec Michel ; Double Open avec Audrey</li><li><b>Audrey</b> → Double Open avec Katell</li></ul><p><b>Mercredi :</b> séance renforcement/cardio HYROX chez Remise en Forme avec Katell, coachée par Rémi ou Tanguy.</p><p><b>Samedi :</b> séance musculation chez Remise en Forme, souvent avec Tanguy.</p></div>
+<div class="card"><h2>🔔 Alertes à surveiller</h2><label><input id="alertParis" type="checkbox" style="width:auto"> Ouverture inscriptions HYROX Paris décembre 2026</label><label><input id="alertNice" type="checkbox" style="width:auto"> Logistique HYROX Nice validée</label><label><input id="alertLannion" type="checkbox" style="width:auto"> Lannion préparé comme test</label></div>
+</section>
+<section id="today" class="hidden">
+<div class="card"><h2>➕ Ajouter / modifier une journée</h2><div class="grid"><label>Date <input id="d_date" type="date"></label><label>Poids (kg) <input id="d_weight" type="number" step="0.1"></label><label>Sommeil Apple Watch <input id="d_sleep" placeholder="ex : 7h03"></label><label>Réveil <select id="d_wake"><option></option><option>🟢 Vert</option><option>🟠 Orange</option><option>🔴 Rouge</option></select></label><label>Fatigue /10 <input id="d_fatigue" type="number" min="0" max="10"></label><label>Courbatures /10 <input id="d_soreness" type="number" min="0" max="10"></label></div><label>Notes matin <textarea id="d_notes"></textarea></label></div>
+<div class="card"><h2>Type de séance</h2><button class="primary" onclick="mode('prepared')">Séance préparée</button><button onclick="mode('coach')">Séance coach après coup</button></div>
+<div id="prepared" class="card"><h2>✅ Séance préparée</h2><label>Nom de séance <input id="p_name" placeholder="Endorphine / Remise en Forme / Course"></label><div id="preparedList"></div><h3>⏱️ Timer gainage</h3><div id="timer" class="timer">02:00</div><button onclick="startTimer(120)">2 min</button><button onclick="startTimer(60)">1 min</button><button onclick="stopTimer()">Stop</button><label>Résumé / notes de séance <textarea id="p_notes"></textarea></label><button class="primary" onclick="savePrepared()">Enregistrer la journée</button></div>
+<div id="coach" class="card hidden"><h2>🧑‍🏫 Séance coach après coup</h2><label>Coach / lieu <input id="c_name" placeholder="Rémi / Tanguy / Remise en Forme"></label><label>Contenu <textarea id="c_content" placeholder="100 wall balls&#10;75 push-ups&#10;50 burpees broad jump"></textarea></label><label>Données Apple Watch <textarea id="c_watch" placeholder="Durée, calories, FC moyenne..."></textarea></label><label>Ressenti global /10 <input id="c_rpe" type="number" min="1" max="10"></label><button class="primary" onclick="saveCoach()">Enregistrer la journée</button></div>
+</section>
+<section id="journal" class="hidden"><div class="card"><h2>📅 Journal quotidien</h2><button onclick="render()">Actualiser</button><button onclick="copyLast()">Copier dernière journée</button><button class="danger" onclick="clearData()">Effacer toutes les données</button><div id="journalBox" class="history"></div></div></section>
+<section id="stats" class="hidden"><div class="card"><h2>📈 Courbes</h2><h3>Poids</h3><canvas id="weightChart" width="750" height="230"></canvas><h3>Sommeil</h3><canvas id="sleepChart" width="750" height="230"></canvas></div><div class="card"><h2>🏋️ Références enregistrées</h2><div id="recordsBox" class="history"></div></div></section>
+<section id="setup" class="hidden"><div class="card"><h2>📱 Installation iPhone</h2><ol><li>Ouvre ce fichier dans Safari.</li><li>Appuie sur <b>Partager</b>.</li><li>Choisis <b>Ajouter à l’écran d’accueil</b>.</li><li>Nomme le raccourci : <b>HYROX Michel</b>.</li></ol><p class="muted">Les données sont sauvegardées localement dans Safari sur cet iPhone. Pour les conserver, utilise toujours le même fichier et le même navigateur.</p></div><div class="card"><h2>🎨 Style</h2><p>Thème bleu marine activé. Version pensée comme mini-app iPhone.</p></div></section>
+</main>
+<script>
+const KEY="hyrox_michel_v3_days",startPrep=new Date("2026-06-17T00:00:00"),niceDate=new Date("2026-10-30T00:00:00");
+const defaultDays=[{date:"2026-06-17",weight:"94.9",sleep:"6h45",wake:"🟠 Orange",fatigue:"",soreness:"",notes:"Réveils nocturnes entre 3h40 et 5h30. Journée classée orange.",type:"Séance Endorphine",rpe:"8.5",watch:"Apple Watch : 1h07m07s, 518 kcal actives, 650 kcal totales, FC moyenne 111 bpm.",content:`Séance veille coach HYROX :
+- 100 Wall Balls
+- 75 Push-Ups
+- 50 Burpees Broad Jump
+
+Échauffement :
+- Rameur : 5:07, 1 205 m, 75 cal, 28 spm
+- SkiErg : 5:05, 65 cal, 45 spm
+
+HYROX :
+- Wall Balls : 40 reps @ 9 kg (30 + repos 1 min + 10)
+- Lunges : 50 reps @ 2 haltères de 10 kg (25 + repos 1 min + 25)
+
+Pectoraux :
+- Butterfly : 30 kg x 12 ; 45 kg x 10 ; 50 kg x 9
+
+Épaules / haut du dos :
+- Peck Back : 20 kg x 8 ; 25 kg x 8 ; 35 kg x 5
+
+Tronc :
+- Obliques Panatta : 35 kg x 10D/10G ; 45 kg x 10D/10G ; 50 kg x 8D/8G
+- Crunch Panatta : 45 kg x 12 ; 50 kg x 12 ; 55 kg x 10
+
+Finisher :
+- Tapis : 11:13, 1,55 km, 130 kcal, inclinaison 2 %, course à 9 km/h puis retour au calme.`},{date:"2026-06-18",weight:"94.1",sleep:"7h03",wake:"🟢 Vert",fatigue:"0",soreness:"0",notes:"Bon réveil vers 5h, rendormissement jusqu'à 5h30. Bonne nuit. 0 courbature, bonnes sensations.",type:"Check-in",rpe:"",watch:"",content:"Routine HYROX du jour à réaliser : 30 wall balls, 50 lunges, 2 minutes de gainage."}];
+const exercises=[["Rameur","échauffement / cardio",1],["SkiErg","échauffement / cardio",1],["Wall Balls","routine 30 reps",3],["Lunges","routine 50 reps",3],["Développé poitrine guidé","3 x 10-12",3],["Butterfly","3 x 12-15",3],["Peck Back","arrière épaules / posture",3],["Crunch machine","3 x 12-20",3],["Obliques machine droite","3 séries",3],["Obliques machine gauche","3 séries",3],["Gainage","2 minutes",1],["Tapis","finisher / retour au calme",1]];
+function getDays(){let d=localStorage.getItem(KEY);if(!d){localStorage.setItem(KEY,JSON.stringify(defaultDays));return defaultDays}return JSON.parse(d)}
+function setDays(d){localStorage.setItem(KEY,JSON.stringify(d))}
+function tab(id){document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));document.getElementById("btn-"+id).classList.add("active");render()}
+function mode(m){prepared.classList.toggle("hidden",m!=="prepared");coach.classList.toggle("hidden",m!=="coach")}
+function initPrepared(){let html="";exercises.forEach((e,i)=>{html+=`<div class="exercise"><h3>${e[0]} <span class="muted">${e[1]}</span></h3><div class="row head"><div></div><div>Série</div><div>Poids</div><div>Reps</div></div>`;for(let s=1;s<=e[2];s++){html+=`<div class="row"><input type="checkbox" id="p_${i}_${s}_done"><div>Série ${s}</div><input id="p_${i}_${s}_kg" placeholder="kg"><input id="p_${i}_${s}_reps" placeholder="reps"></div>`}html+=`</div>`});preparedList.innerHTML=html}
+function currentCheckin(){return{date:d_date.value,weight:d_weight.value,sleep:d_sleep.value,wake:d_wake.value,fatigue:d_fatigue.value,soreness:d_soreness.value,notes:d_notes.value}}
+function savePrepared(){let c=currentCheckin(),lines=[];exercises.forEach((e,i)=>{lines.push(e[0]+":");for(let s=1;s<=e[2];s++){let done=document.getElementById(`p_${i}_${s}_done`).checked?"✅":"⬜",kg=document.getElementById(`p_${i}_${s}_kg`).value||"-",reps=document.getElementById(`p_${i}_${s}_reps`).value||"-";lines.push(`  ${done} S${s}: ${kg} / ${reps}`)}});upsert({...c,type:p_name.value||"Séance préparée",content:lines.join("\n")+"\n\nNotes : "+(p_notes.value||"-"),watch:"",rpe:""})}
+function saveCoach(){let c=currentCheckin();upsert({...c,type:c_name.value||"Séance coach",content:c_content.value||"",watch:c_watch.value||"",rpe:c_rpe.value||""})}
+function upsert(day){let days=getDays().filter(x=>x.date!==day.date);days.unshift(day);days.sort((a,b)=>b.date.localeCompare(a.date));setDays(days);render();alert("Journée enregistrée ✅")}
+function frDate(d){let [y,m,da]=d.split("-");return `${da}/${m}/${y}`}
+function formatDay(x){return `📅 ${frDate(x.date)} — ${x.type}
+Poids : ${x.weight||"-"} kg | Sommeil : ${x.sleep||"-"} | Réveil : ${x.wake||"-"}
+Fatigue : ${x.fatigue||"-"}/10 | Courbatures : ${x.soreness||"-"}/10 | RPE séance : ${x.rpe||"-"}/10
+
+Notes matin :
+${x.notes||"-"}
+
+${x.watch?("Données Apple Watch :\n"+x.watch+"\n\n"):""}Séance :
+${x.content||"-"}`}
+function render(){let days=getDays();journalBox.textContent=days.map(formatDay).join("\n\n────────────────────────\n\n");let last=days[0]||{};dashWeight.textContent=last.weight?last.weight+" kg":"-";dashSleep.textContent=last.sleep||"-";dashSessions.textContent=days.filter(d=>d.type!=="Check-in").length;let now=new Date(),total=niceDate-startPrep,done=Math.max(0,Math.min(total,now-startPrep)),pct=Math.round(done/total*100);niceProgress.style.width=pct+"%";let left=Math.ceil((niceDate-now)/(1000*60*60*24));countdown.textContent=`J-${left} avant Nice · progression calendrier : ${pct}%`;drawChart("weightChart",days.map(d=>({date:d.date,val:parseFloat(String(d.weight).replace(",","."))})).filter(x=>!isNaN(x.val)).reverse(),"kg");drawChart("sleepChart",days.map(d=>({date:d.date,val:sleepToHours(d.sleep)})).filter(x=>!isNaN(x.val)).reverse(),"h");recordsBox.textContent=`Butterfly : 50 kg × 9 — 17/06
+Crunch machine : 55 kg × 10 — 17/06
+Obliques Panatta : 50 kg × 8D + 8G — 17/06
+Lunges : 2 × 10 kg, 50 reps — 17/06
+Wall Balls : 9 kg, 40 reps — 17/06
+Rameur : 1 205 m en 5:07 — 17/06
+SkiErg : 65 cal en 5:05 — 17/06`}
+function sleepToHours(s){if(!s)return NaN;let m=String(s).match(/(\d+)\s*h\s*(\d+)?/i);if(!m)return parseFloat(s);return parseInt(m[1])+(parseInt(m[2]||0)/60)}
+function drawChart(id,data,suffix){let c=document.getElementById(id),ctx=c.getContext("2d");ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle="#061a33";ctx.font="14px -apple-system";if(data.length<2){ctx.fillText("Ajoute au moins 2 données pour afficher la courbe.",20,40);return}let vals=data.map(x=>x.val),min=Math.min(...vals)-.2,max=Math.max(...vals)+.2;ctx.strokeStyle="#1f6feb";ctx.lineWidth=4;ctx.beginPath();data.forEach((p,i)=>{let x=45+i*((c.width-85)/(data.length-1)),y=190-((p.val-min)/(max-min))*140;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();ctx.fillStyle="#061a33";data.forEach((p,i)=>{let x=45+i*((c.width-85)/(data.length-1)),y=190-((p.val-min)/(max-min))*140;ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill();ctx.fillText(p.val.toFixed(1)+suffix,x-18,y-12)})}
+async function copyLast(){let d=getDays()[0];if(!d)return;let txt=formatDay(d);try{await navigator.clipboard.writeText(txt);alert("Copié ✅")}catch(e){alert(txt)}}
+function clearData(){if(confirm("Effacer tout le carnet V3 sur cet iPhone ?")){localStorage.removeItem(KEY);render()}}
+let interval;function startTimer(sec){clearInterval(interval);let r=sec;function u(){timer.textContent=String(Math.floor(r/60)).padStart(2,"0")+":"+String(r%60).padStart(2,"0");if(r===0){clearInterval(interval);alert("Temps écoulé !")}r--}u();interval=setInterval(u,1000)}function stopTimer(){clearInterval(interval)}
+initPrepared();d_date.value=new Date().toISOString().slice(0,10);render();
+if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js").catch(()=>{});}
+</script>
+</body></html>
