@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>HYROX Michel V5</title>
+<title>HYROX Michel V5.1</title>
 <style>
 :root{--n:#061a33;--n2:#0b2a4a;--b:#1f6feb;--bg:#f3f6fa;--c:#fff;--t:#172033;--m:#657286;--l:#dbe3ee;--g:#16a34a;--o:#f59e0b;--r:#dc2626}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--t);line-height:1.42}
@@ -36,7 +36,7 @@ table{width:100%;border-collapse:collapse}th,td{border:1px solid #dbe3ee;padding
 </style>
 </head>
 <body>
-<header><h1>📒 Carnet Prépa HYROX Michel</h1><div class="sub">V5 · Historique HYROX + records solo uniquement · Nice 30/10</div></header>
+<header><h1>📒 Carnet Prépa HYROX Michel</h1><div class="sub">V5.1 · Préremplissage journée + compteurs corrigés · Nice 30/10</div></header>
 <nav>
 <button id="b-home" class="on" onclick="tab('home')">Accueil</button>
 <button id="b-days" onclick="tab('days')">Journées</button>
@@ -99,7 +99,7 @@ table{width:100%;border-collapse:collapse}th,td{border:1px solid #dbe3ee;padding
 
 <section id="add" class="hidden">
 <div class="card">
-<h2>➕ Ajouter une journée</h2>
+<h2>➕ Ajouter / modifier une journée</h2><p class="muted">Quand tu choisis une date déjà enregistrée, les champs se remplissent automatiquement. Enregistrer remplace la journée existante.</p>
 <div class="grid"><label>Date<input id="date" type="date"></label><label>Poids<input id="weight" type="number" step="0.1"></label><label>Sommeil<input id="sleep" placeholder="7h03"></label><label>Réveil<select id="wake"><option></option><option>🟢 Vert</option><option>🟠 Orange</option><option>🔴 Rouge</option></select></label><label>Courbatures /10<input id="sore" type="number" min="0" max="10"></label><label>RPE séance /10<input id="rpe" type="number" min="0" max="10"></label></div>
 <label>Type / lieu<input id="type" placeholder="Endorphine / Remise en Forme / Coach Tanguy"></label>
 <label>Notes matin<textarea id="notes"></textarea></label>
@@ -203,12 +203,56 @@ function setDays(x){localStorage.setItem(KEY,JSON.stringify(x))}
 function tab(id){document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll("nav button").forEach(b=>b.classList.remove("on"));document.getElementById("b-"+id).classList.add("on");render()}
 function fr(d){let [y,m,j]=d.split("-");return j+"/"+m+"/"+y}
 function fmt(x){return `<div class="card day"><h2>📅 ${fr(x.date)} — ${x.type}</h2><span class="badge ${x.wake&&x.wake.includes("Vert")?"green":x.wake&&x.wake.includes("Orange")?"orange":"blue"}">${x.wake||"Réveil non renseigné"}</span><p><b>Poids :</b> ${x.weight||"-"} kg · <b>Sommeil :</b> ${x.sleep||"-"} · <b>Courbatures :</b> ${x.sore||"-"}/10 · <b>RPE :</b> ${x.rpe||"-"}/10</p><h3>Notes</h3><div class="history">${x.notes||"-"}</div>${x.watch?`<h3>Apple Watch</h3><div class="history">${x.watch}</div>`:""}<h3>Séance</h3><div class="history">${x.content||"-"}</div></div>`}
-function render(){let d=days().sort((a,b)=>b.date.localeCompare(a.date));dayCards.innerHTML=d.map(fmt).join("");let last=d[0]||{};dw.textContent=last.weight?last.weight+" kg":"-";ds.textContent=last.sleep||"-";dr.textContent=last.wake?last.wake.split(" ")[0]:"-";vs.textContent=d.filter(x=>x.type!="Check-in matin").length;vwb.textContent=40;vl.textContent=50;vr.textContent="1205 m";let now=new Date(),pct=Math.max(0,Math.min(100,Math.round((now-start)/(nice-start)*100)));prog.style.width=pct+"%";count.textContent=`J-${Math.ceil((nice-now)/86400000)} avant Nice · ${pct}% du calendrier`;hyroxRows.innerHTML=hyrox.map(x=>`<tr><td>${x.event}</td><td>${x.format}</td><td>${x.partner}</td><td><b>${x.time}</b></td><td>${x.records}</td></tr>`).join("");chart("cw",d.map(x=>({date:x.date,val:parseFloat(x.weight)})).filter(x=>!isNaN(x.val)).reverse(),"kg");chart("cs",d.map(x=>({date:x.date,val:sleepH(x.sleep)})).filter(x=>!isNaN(x.val)).reverse(),"h")}
+
+function countWallBalls(d){
+ let total=0;
+ d.forEach(x=>{
+  let c=(x.content||"").toLowerCase();
+  let m=c.match(/wall\s*balls?\s*:\s*(\d+)/i); if(m){total+=parseInt(m[1]); return;}
+  let all=[...c.matchAll(/(\d+)\s*(?:reps?)?\s*(?:wall\s*balls?|wallball)/gi)];
+  all.forEach(z=>total+=parseInt(z[1]));
+ });
+ return total||"-";
+}
+function countLunges(d){
+ let total=0;
+ d.forEach(x=>{
+  let c=(x.content||"").toLowerCase();
+  let m=c.match(/lunges?\s*:\s*(\d+)/i); if(m){total+=parseInt(m[1]); return;}
+  let all=[...c.matchAll(/(\d+)\s*(?:reps?)?\s*(?:lunges?|fentes?)/gi)];
+  all.forEach(z=>total+=parseInt(z[1]));
+ });
+ return total||"-";
+}
+function countRower(d){
+ let best=0;
+ d.forEach(x=>{
+  let c=(x.content||"").toLowerCase();
+  let all=[...c.matchAll(/rameur\s*:\s*[^,\n]*,\s*([\d\s]+)\s*m/gi)];
+  all.forEach(z=>{let v=parseInt(String(z[1]).replace(/\s/g,'')); if(v>best) best=v;});
+ });
+ return best||1205;
+}
+function fillFormFromDate(){
+ let d=days();
+ let x=d.find(j=>j.date===date.value);
+ if(!x) return;
+ weight.value=x.weight||"";
+ sleep.value=x.sleep||"";
+ wake.value=x.wake||"";
+ sore.value=x.sore||"";
+ rpe.value=x.rpe||"";
+ type.value=x.type||"";
+ notes.value=x.notes||"";
+ content.value=x.content||"";
+ watch.value=x.watch||"";
+}
+function render(){let d=days().sort((a,b)=>b.date.localeCompare(a.date));dayCards.innerHTML=d.map(fmt).join("");let last=d[0]||{};dw.textContent=last.weight?last.weight+" kg":"-";ds.textContent=last.sleep||"-";dr.textContent=last.wake?last.wake.split(" ")[0]:"-";vs.textContent=d.filter(x=>x.type!="Check-in matin").length;vwb.textContent=countWallBalls(d);vl.textContent=countLunges(d);vr.textContent=countRower(d)+" m";let now=new Date(),pct=Math.max(0,Math.min(100,Math.round((now-start)/(nice-start)*100)));prog.style.width=pct+"%";count.textContent=`J-${Math.ceil((nice-now)/86400000)} avant Nice · ${pct}% du calendrier`;hyroxRows.innerHTML=hyrox.map(x=>`<tr><td>${x.event}</td><td>${x.format}</td><td>${x.partner}</td><td><b>${x.time}</b></td><td>${x.records}</td></tr>`).join("");chart("cw",d.map(x=>({date:x.date,val:parseFloat(x.weight)})).filter(x=>!isNaN(x.val)).reverse(),"kg");chart("cs",d.map(x=>({date:x.date,val:sleepH(x.sleep)})).filter(x=>!isNaN(x.val)).reverse(),"h")}
 function sleepH(s){let m=String(s||"").match(/(\d+)h(\d+)?/);return m?parseInt(m[1])+(parseInt(m[2]||0)/60):NaN}
 function chart(id,data,suf){let c=document.getElementById(id);if(!c)return;let ctx=c.getContext("2d");ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle="#061a33";ctx.font="14px -apple-system";if(data.length<2){ctx.fillText("Ajoute au moins 2 données.",20,40);return}let vals=data.map(x=>x.val),min=Math.min(...vals)-.2,max=Math.max(...vals)+.2;ctx.strokeStyle="#1f6feb";ctx.lineWidth=4;ctx.beginPath();data.forEach((p,i)=>{let x=45+i*((c.width-85)/(data.length-1)),y=190-((p.val-min)/(max-min))*140;if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y)});ctx.stroke();ctx.fillStyle="#061a33";data.forEach((p,i)=>{let x=45+i*((c.width-85)/(data.length-1)),y=190-((p.val-min)/(max-min))*140;ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill();ctx.fillText(p.val.toFixed(1)+suf,x-18,y-12)})}
-function saveDay(){let d=days().filter(x=>x.date!==date.value);d.unshift({date:date.value,weight:parseFloat(weight.value)||"",sleep:sleep.value,wake:wake.value,sore:sore.value,rpe:rpe.value,type:type.value||"Journée",notes:notes.value,content:content.value,watch:watch.value});setDays(d);render();alert("Journée enregistrée ✅")}
+function saveDay(){let d=days().filter(x=>x.date!==date.value);d.unshift({date:date.value,weight:parseFloat(weight.value)||"",sleep:sleep.value,wake:wake.value,sore:sore.value,rpe:rpe.value,type:type.value||"Journée",notes:notes.value,content:content.value,watch:watch.value});setDays(d);render();alert("Journée enregistrée / mise à jour ✅")}
 let interval;function startTimer(s){clearInterval(interval);let r=s;function u(){timer.textContent=String(Math.floor(r/60)).padStart(2,"0")+":"+String(r%60).padStart(2,"0");if(r===0){clearInterval(interval);alert("Temps écoulé !")}r--}u();interval=setInterval(u,1000)}function stopTimer(){clearInterval(interval)}
-date.value=new Date().toISOString().slice(0,10);render();
+date.value=new Date().toISOString().slice(0,10);date.addEventListener("change",fillFormFromDate);fillFormFromDate();render();
 if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js").catch(()=>{})}
 </script>
 </body></html>
