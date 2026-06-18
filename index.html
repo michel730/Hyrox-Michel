@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="HYROX Michel">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>HYROX Michel V5.2</title>
+<title>HYROX Michel V5.3</title>
 <style>
 :root{--n:#061a33;--n2:#0b2a4a;--b:#1f6feb;--bg:#f3f6fa;--c:#fff;--t:#172033;--m:#657286;--l:#dbe3ee;--g:#16a34a;--o:#f59e0b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--t);line-height:1.42}
@@ -27,7 +27,7 @@ nav button.on{background:var(--n);color:white}
 input,select,textarea,button{font-size:16px;border-radius:10px;border:1px solid #c8d0dc;padding:9px}input,select,textarea{width:100%;background:white}textarea{min-height:95px}label{display:block;font-weight:800;margin:9px 0 4px}
 button{background:#eef3f8;color:var(--n);font-weight:900}.primary{background:var(--n);color:white}.danger{background:#fee2e2;color:#991b1b}
 .hidden{display:none}.history{white-space:pre-wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;font-size:14px;overflow:auto}
-.day{border-left:6px solid var(--b)}.progress{height:14px;background:#dbe5f0;border-radius:999px;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,#1f6feb,#0b2a4a)}
+.drop{border:2px dashed #9bb4d3;border-radius:14px;padding:16px;text-align:center;background:#f8fbff}.preview{max-width:100%;border-radius:12px;margin-top:10px}.activityBox{border:1px solid #dbe3ee;border-radius:14px;padding:12px;background:#f8fbff}.day{border-left:6px solid var(--b)}.progress{height:14px;background:#dbe5f0;border-radius:999px;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,#1f6feb,#0b2a4a)}
 canvas{width:100%;height:230px;background:white;border:1px solid #e2e8f0;border-radius:12px}.timer{font-size:44px;font-weight:900;color:var(--n)}
 table{width:100%;border-collapse:collapse}th,td{border:1px solid #dbe3ee;padding:8px;text-align:left}th{background:#eef4fb;color:var(--n)}
 .done{opacity:.65;text-decoration:line-through}
@@ -35,7 +35,7 @@ table{width:100%;border-collapse:collapse}th,td{border:1px solid #dbe3ee;padding
 </style>
 </head>
 <body>
-<header><h1>📒 Carnet Prépa HYROX Michel</h1><div class="sub">V5.2 · planning jusqu’à Nice + validation séances · records solo</div></header>
+<header><h1>📒 Carnet Prépa HYROX Michel</h1><div class="sub">V5.3 · saisie activités + photos séance · planning Nice</div></header>
 <nav>
 <button id="b-home" class="on" onclick="tab('home')">Accueil</button>
 <button id="b-plan" onclick="tab('plan')">Planning</button>
@@ -104,6 +104,58 @@ table{width:100%;border-collapse:collapse}th,td{border:1px solid #dbe3ee;padding
 <h2>➕ Exercices non prévus</h2>
 <label>Ajoute ici ce que tu as fait en plus<textarea id="extra" placeholder="Ex : 3x12 butterfly 45kg&#10;10 min tapis 9 km/h inclinaison 2"></textarea></label>
 <button onclick="appendExtra()">Ajouter au contenu séance</button>
+</div>
+
+
+<div class="card">
+<h2>🏋️ Saisie rapide par activité</h2>
+<p class="muted">Choisis une activité habituelle, renseigne reps / poids / temps / distance, puis ajoute-la au contenu de séance.</p>
+<label>Activité
+<select id="activity" onchange="activityChanged()">
+<option value="">Choisir...</option>
+<option>Wall Balls</option>
+<option>Lunges / Fentes</option>
+<option>Gainage</option>
+<option>Rameur</option>
+<option>SkiErg</option>
+<option>Tapis / Course</option>
+<option>Burpees Broad Jump</option>
+<option>Sled Push</option>
+<option>Sled Pull</option>
+<option>Farmer Carry</option>
+<option>Sandbag Lunges</option>
+<option>Butterfly</option>
+<option>Développé poitrine guidé</option>
+<option>Peck Back</option>
+<option>Crunch machine</option>
+<option>Obliques machine</option>
+<option>Push-ups</option>
+<option>Autre exercice</option>
+</select></label>
+<div id="activityFields" class="activityBox hidden">
+<div class="grid">
+<label>Reps <input id="a_reps" placeholder="ex : 30"></label>
+<label>Poids / charge <input id="a_weight" placeholder="ex : 9 kg / 2x10 kg"></label>
+<label>Temps <input id="a_time" placeholder="ex : 5:07 / 2 min"></label>
+<label>Distance <input id="a_dist" placeholder="ex : 1205 m / 1,55 km"></label>
+<label>Calories <input id="a_cal" placeholder="ex : 75 kcal"></label>
+<label>Séries / format <input id="a_sets" placeholder="ex : 30 + 10 / 3x12"></label>
+</div>
+<label>Commentaire <input id="a_note" placeholder="facile, dur, propre, arrêt avant échec..."></label>
+<button class="primary" onclick="addActivity()">Ajouter cette activité</button>
+</div>
+</div>
+
+<div class="card">
+<h2>📷 Photo / capture séance</h2>
+<p class="muted">Tu peux joindre une photo du tableau de séance, écran rameur/SkiErg, Apple Watch, etc. L’app la stocke localement, mais l’analyse IA doit encore passer par ChatGPT.</p>
+<div class="drop" onclick="photoInput.click()">
+<b>Dépose une image ici ou touche pour choisir une photo</b><br>
+<span class="muted">JPG / PNG / capture d’écran</span>
+<input id="photoInput" type="file" accept="image/*" style="display:none" onchange="handlePhoto(event)">
+<div id="photoPreview"></div>
+</div>
+<button onclick="addPhotoNote()">Ajouter la photo au journal de séance</button>
 </div>
 
 <div class="card">
@@ -182,6 +234,45 @@ function chart(id,data,suf){let c=document.getElementById(id);if(!c)return;let c
 function saveDay(){let d=days().filter(x=>x.date!==date.value);d.unshift({date:date.value,weight:parseFloat(weight.value)||"",sleep:sleep.value,wake:wake.value,sore:sore.value,rpe:rpe.value,type:type.value||"Journée",notes:notes.value,content:content.value,watch:watch.value});setDays(d);render();alert("Journée enregistrée / mise à jour ✅")}
 let interval;function startTimer(s){clearInterval(interval);let r=s;function u(){timer.textContent=String(Math.floor(r/60)).padStart(2,"0")+":"+String(r%60).padStart(2,"0");if(r===0){clearInterval(interval);alert("Temps écoulé !")}r--}u();interval=setInterval(u,1000)}function stopTimer(){clearInterval(interval)}
 date.value=new Date().toISOString().slice(0,10);date.addEventListener("change",fillFormFromDate);fillFormFromDate();render();
+
+let currentPhotoName="";
+function activityChanged(){
+  const v=activity.value;
+  activityFields.classList.toggle("hidden", !v);
+  a_reps.value=""; a_weight.value=""; a_time.value=""; a_dist.value=""; a_cal.value=""; a_sets.value=""; a_note.value="";
+  if(v==="Wall Balls"){a_reps.placeholder="30";a_weight.placeholder="9 kg";a_sets.placeholder="30 + 10";}
+  if(v==="Lunges / Fentes"){a_reps.placeholder="50";a_weight.placeholder="2x10 kg";a_sets.placeholder="25 + 25";}
+  if(v==="Gainage"){a_time.placeholder="2 min";}
+  if(v==="Rameur"||v==="SkiErg"){a_time.placeholder="5:07";a_dist.placeholder="1205 m";a_cal.placeholder="75 kcal";}
+  if(v==="Tapis / Course"){a_time.placeholder="10 min";a_dist.placeholder="1,55 km";a_sets.placeholder="9 km/h inclinaison 2%";}
+}
+function addActivity(){
+  if(!activity.value)return;
+  let parts=[activity.value];
+  if(a_sets.value)parts.push("format "+a_sets.value);
+  if(a_reps.value)parts.push(a_reps.value+" reps");
+  if(a_weight.value)parts.push("@ "+a_weight.value);
+  if(a_time.value)parts.push("temps "+a_time.value);
+  if(a_dist.value)parts.push("distance "+a_dist.value);
+  if(a_cal.value)parts.push(a_cal.value);
+  if(a_note.value)parts.push("note : "+a_note.value);
+  content.value=(content.value?content.value+"\n":"")+ "- "+parts.join(" · ");
+  activity.value=""; activityFields.classList.add("hidden");
+}
+function handlePhoto(e){
+  const file=e.target.files[0]; if(!file)return;
+  currentPhotoName=file.name;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    photoPreview.innerHTML='<img class="preview" src="'+ev.target.result+'"><div class="muted">'+file.name+'</div>';
+  };
+  reader.readAsDataURL(file);
+}
+function addPhotoNote(){
+  if(!currentPhotoName){alert("Choisis d’abord une photo.");return;}
+  content.value=(content.value?content.value+"\n":"")+"- Photo jointe : "+currentPhotoName+" (à analyser par IA dans ChatGPT)";
+}
+
 if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js").catch(()=>{})}
 </script>
 </body></html>
